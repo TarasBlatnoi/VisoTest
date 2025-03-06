@@ -4,13 +4,14 @@ function Home() {
   const navigate = useNavigate();
   return (
     <div>
-      Hello from Home{" "}
+      Hello from Home
       <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
         onClick={() => {
-          navigate("recipes");
+          navigate("meals");
         }}
       >
-        View Recipes
+        View meals
       </button>
     </div>
   );
