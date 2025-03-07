@@ -21,20 +21,9 @@ interface MealCartStore {
 export const useMealCartStore = create<MealCartStore>()(
   persist(
     (set, get) => {
-      let storedMeals: IMeal[] = [];
-      try {
-        const localData = localStorage.getItem("meal-recipe-cart");
-        if (localData) {
-          const parsedData = JSON.parse(localData);
-          storedMeals = parsedData.state?.meals || [];
-        }
-      } catch (error) {
-        console.error("Failed to parse localStorage", error);
-      }
-
       return {
-        meals: storedMeals,
-        totalMeals: storedMeals.length,
+        meals: [],
+        totalMeals: 0,
 
         addMeal: (meal) =>
           set((state) => {
