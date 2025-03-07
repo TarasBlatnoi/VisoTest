@@ -18,11 +18,6 @@ const Pagination: React.FC<PaginationProps> = ({
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i);
   }
-  console.log({ pageNumbers });
-  console.log({ pagesOffset });
-  console.log({
-    cond: 7 < PAGES_NUMBERS + pagesOffset && 7 > pagesOffset,
-  });
   return (
     <nav>
       <div className="flex w-full">
@@ -70,7 +65,7 @@ const Pagination: React.FC<PaginationProps> = ({
                         if (index + PAGES_NUMBERS + 2 >= pageNumbers.length)
                           return pageNumbers.length - 3 - PAGES_NUMBERS;
                         if (!index) return 0;
-                        return index - 1;
+                        return index - 2;
                       });
                     }}
                   >
@@ -87,18 +82,8 @@ const Pagination: React.FC<PaginationProps> = ({
                   </li>
                 </>
               );
-            const addInitial = number === 1 ? 1 : 0;
             const addLast =
               pagesOffset + PAGES_NUMBERS + 2 >= pageNumbers.length - 1 ? 2 : 0;
-            console.log({
-              number,
-              cond:
-                number <= PAGES_NUMBERS + pagesOffset + addLast &&
-                number > pagesOffset + addInitial,
-              cond1: number <= PAGES_NUMBERS + pagesOffset + addLast,
-              cond2: number > pagesOffset + addInitial,
-              addInitial,
-            });
             if (
               index === pageNumbers.length - 1 ||
               index === 0 ||
@@ -117,7 +102,7 @@ const Pagination: React.FC<PaginationProps> = ({
                       if (index + PAGES_NUMBERS + 2 >= pageNumbers.length)
                         return pageNumbers.length - 3 - PAGES_NUMBERS;
                       if (!index) return 0;
-                      return index - 1;
+                      return index - 2;
                     });
                   }}
                 >

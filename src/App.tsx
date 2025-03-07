@@ -11,6 +11,7 @@ import Home from "./pages/Home/Home";
 import Meals from "./pages/Meals/Meals";
 import "./index.css";
 import DetailMeal from "./pages/DetailedMeal/DetailMeal";
+import Cart from "./pages/Cart/Cart";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="meals" element={<Meals />} />
       <Route path="meals/:id" element={<DetailMeal />} />
+      <Route path="cart" element={<Cart />} />
     </Route>
   )
 );

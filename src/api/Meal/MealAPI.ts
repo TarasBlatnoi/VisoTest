@@ -9,25 +9,25 @@ class MealAPI {
     const data = await response.json();
     return data;
   }
-  async getMealsByCategory() {
-    const data = await this.getCategories();
+  async getMealsByLetter() {
+    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
     let allMeals: IMeal[] = [];
 
-    for (const category of data.categories) {
-      const categoryResponse = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category.strCategory}`
+    const mealRequests = alphabet.map(async (letter) => {
+      const response = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`
       );
-      const categoryData = await categoryResponse.json();
-      allMeals = [
-        ...allMeals,
-        ...categoryData.meals.map((meal: IMeal) => ({
-          ...meal,
-          ...category,
-        })),
-      ];
-    }
+      const data = await response.json();
+      if (data.meals) {
+        allMeals = [...allMeals, ...data.meals];
+      }
+    });
+
+    await Promise.all(mealRequests);
+
     const shuffledMeals = allMeals.sort(() => Math.random() - 0.5);
-    return { meals: shuffledMeals, categories: data.categories };
+    console.log({ shuffledMeals });
+    return { meals: shuffledMeals };
   }
 
   async getMealById(id: string) {
