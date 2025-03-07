@@ -4,6 +4,9 @@ import MealAPI from "../../api/Meal/MealAPI";
 import MealCard from "../../components/MealCard";
 import Filter from "../../components/Filter";
 import { useCategoryFilterStore } from "../../store/categoryStore";
+import Pagination from "../../components/Pagintaion";
+
+const MEALS_PER_PAGE = 6;
 
 function Meals() {
   const { data } = useQuery({
@@ -15,6 +18,7 @@ function Meals() {
   const { categoriesFilter } = useCategoryFilterStore();
   const [searchMeal, setSearchMeal] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: searchedMeals } = useQuery({
     queryKey: ["meals", debouncedSearch],
     queryFn: () => MealAPI.getMealsOnName(debouncedSearch),
@@ -22,18 +26,17 @@ function Meals() {
   });
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (searchMeal.length === 1) setDebouncedSearch(searchMeal);
+      if (searchMeal.length === 1 || searchMeal.length === 0)
+        setDebouncedSearch(searchMeal);
     }, 500);
     return () => {
       clearTimeout(handler);
     };
   }, [searchMeal]);
-  console.log({ searchedMeals });
   const mealsToDisplay =
     debouncedSearch && Array.isArray(searchedMeals) && searchedMeals.length
       ? searchedMeals
       : data?.meals;
-  console.log({ mealsToDisplay, debouncedSearch });
   let filteredMeals = mealsToDisplay?.filter((meal) =>
     categoriesFilter.includes(meal.strCategory)
   );
@@ -49,15 +52,28 @@ function Meals() {
     }
   }
 
+  const indexOfLastPost = currentPage * MEALS_PER_PAGE;
+  const indexOfFirstPost = indexOfLastPost - MEALS_PER_PAGE;
+  const currentMeals = filteredMeals?.slice(indexOfFirstPost, indexOfLastPost);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  console.log({ filteredMeals, searchedMeals, debouncedSearch });
   return (
     <div>
-      <div className="grid grid-cols-[2fr_6fr_2fr]">
+      <div className="grid grid-cols-[2fr_6fr_2fr] ">
         <Filter categories={data?.categories} />
-        <div className="grid grid-cols-3 p-4 w-full">
-          {filteredMeals?.map((meal) => (
-            <MealCard key={meal.idMeal} meal={meal} />
-          ))}
+        <div className="w-full h-full">
+          <div className="grid grid-cols-3 w-full h-[92vh]">
+            {currentMeals?.map((meal) => (
+              <MealCard key={meal.idMeal} meal={meal} />
+            ))}
+          </div>
+          <Pagination
+            postsPerPage={MEALS_PER_PAGE}
+            totalPosts={filteredMeals?.length || 0}
+            paginate={paginate}
+          />
         </div>
+
         <input
           className="bg-blue-400 w-30 h-10 rounded-lg mt-8 ml-4 pb-1 pl-2"
           type="text"

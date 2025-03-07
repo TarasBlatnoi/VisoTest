@@ -9,15 +9,20 @@ function MealCard({ meal }: MealCardProps) {
   const navigate = useNavigate();
   return (
     <div
-      className="bg-gray-200 p-4 m-4 cursor-pointer"
+      className="bg-gray-200 cursor-pointer w-full h-[45vh] flex flex-col items-center"
       onClick={() => {
         navigate(meal.idMeal);
       }}
     >
       <h2 className="text-center">{meal.strMeal}</h2>
-      <br />
       <p>{meal.strCategory}</p>
-      <img src={meal.strMealThumb} alt="mealImg" />
+      <div className="w-full h-[80%] overflow-hidden">
+        <img
+          src={meal.strMealThumb}
+          alt="mealImg"
+          className="w-full h-full object-cover rounded-lg"
+        />
+      </div>
     </div>
   );
 }
